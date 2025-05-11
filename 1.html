@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форма предложений</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+    <style>
+        :root {
+            --color-border-default: #eceef2;
+            --color-border-focus: rgba(102, 102, 255, 0.871);
+            --color-placeholder: #939cb0;
+            --color-primary: rgb(85, 85, 213);
+            --color-background: #f4f4f9;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            padding: 0;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background-color: var(--color-background);
+            overflow: hidden;
+        }
+
+        /* Background Effect */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url('https://rgo.ru/upload/s34web.imageadapter/275fa6a2cac54a1748b07c7ef1a82544/mariya_shevchenko_kardiogramma_gor_462677_beluha.jpg') no-repeat center center fixed;
+            background-size: cover;
+            filter: blur(3px);
+            z-index: -1;
+        }
+
+        .form-container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #555;
+            font-weight: bold;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px 40px 12px 40px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus {
+            border-color: var(--color-primary);
+            outline: none;
+            box-shadow: 0 0 10px rgba(102, 102, 255, 0.5);
+        }
+
+        textarea {
+            resize: vertical;
+                resize: none; /* Запрещаем изменение размера пользователем */
+    width: 100%; /* Задаём ширину 100% относительно контейнера */
+    height: 150px; /* Устанавливаем высоту 200px */
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 12px;
+            top: 70%; /* Сдвиг иконки ниже */
+            transform: translateY(-50%);
+            font-size: 18px;
+            color: #939cb0;
+        }
+
+        button {
+            border: solid;
+            border-color: rgba(102, 102, 255, 0.871);
+            background-color: transparent;
+            color: rgba(102, 102, 255, 0.871);
+            padding: 12px 20px;
+            border-radius: 100px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            transition: background-color 0.4s ease-in-out;
+        }
+
+        button:hover {
+            background-color: rgba(85, 85, 213, 0.871);
+            color: white;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: #ffffff;
+            box-shadow: 0 -2px 8px rgba(255, 0, 0, 0.05);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            z-index: 999;
+            gap: 20px;
+        }
+
+        .nav-btn {
+            text-align: center;
+            font-size: 14px;
+            color: var(--color-primary);
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .nav-btn i {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        @media (min-width: 768px) {
+            .header h1 {
+                font-size: 2.4em;
+            }
+
+            .lesson-block {
+                font-size: 1.1em;
+            }
+
+            .bottom-nav {
+                gap: 40px;
+            }
+        }
+
+        .fas {
+            color: rgb(85, 85, 213);
+        }
+
+        .icon {
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        
+
+        /* Animations */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+  
+
+  <a href="index.html" class="back-button">
+    <span class="icon-group" style="    font-size: 30px;">
+        <i class="fas fa-arrow-left"></i>
+    </span>
+</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h1>Ваши предложения по улучшению сайта</h1>
+    <form action="https://api.web3forms.com/submit" method="POST">
+        <input type="hidden" name="access_key" value="9b651c1d-11e2-40b3-8393-b89a6233c1d6">
+
+        <div class="form-group">
+            <label for="name">ФИО</label>
+            <div class="input-icon">
+                <i class="fas fa-user"></i>
+            </div>
+            <input type="text" id="name" name="name" placeholder="Введите ваше полное имя" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Электронная почта</label>
+            <div class="input-icon">
+                <i class="fas fa-envelope"></i>
+            </div>
+            <input type="email" id="email" name="email" placeholder="example@mail.com" required>
+        </div>
+
+        <div class="form-group">
+            <label for="message">Предложения</label>
+            <div class="input-icon" style="top: 25%;">
+                <i class="fas fa-comment"></i>
+            </div>
+            <textarea id="message" name="message" placeholder="Опишите ваши идеи и предложения" required></textarea>
+        </div>
+
+        <!-- Honeypot Spam Protection -->
+        <input type="checkbox" name="botcheck" class="hidden" style="display: none;"> 
+
+        <!-- Optional Redirect -->
+        <!-- <input type="hidden" name="redirect" value="https://mywebsite.com/thanks.html"> -->
+
+        <button type="submit">Отправить</button>
+    </form>
+</div>
+
+
+
+
+</body>
+</html>

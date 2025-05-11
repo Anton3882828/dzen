@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Добавить книгу и уроки</title>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .box {
+      background: white;
+      padding: 20px;
+      margin: 10px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    input, button, textarea, select {
+      margin: 8px 0;
+      padding: 12px;
+      width: 100%;
+      box-sizing: border-box;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .nav-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="addSection" class="box">
+    <h3>Добавить книгу</h3>
+    <input type="text" id="newBookTitle" placeholder="Название книги" required />
+    <button onclick="addBook()">Добавить книгу</button>
+
+    <hr />
+
+    <h3>Добавить урок</h3>
+    <select id="bookSelect" required>
+      <option value="">Выберите книгу</option>
+    </select>
+    <input type="text" id="lessonTitle" placeholder="Название урока" required />
+    <textarea id="lessonContent" placeholder="Содержание урока" required></textarea>
+    <input type="text" id="lessonImageUrl" placeholder="Ссылка на изображение (необязательно)" />
+    <button onclick="addLesson()">Добавить урок</button>
+  </div>
+
+  <script>
+    // Инициализация Firebase
+    const firebaseConfig = {
+  apiKey: "AIzaSyAtTcNlz445cBFFymIiAuDGT-Ylr_e5ewQ",
+  authDomain: "fizika-8727d.firebaseapp.com",
+  projectId: "fizika-8727d",
+  storageBucket: "fizika-8727d.firebasestorage.app",
+  messagingSenderId: "39044212427",
+  appId: "1:39044212427:web:92a85cc7365c88b47d9d4e",
+  measurementId: "G-ZQGW1X15V1"
+    };
+    
+    try {
+      firebase.initializeApp(firebaseConfig);
+    } catch (err) {
+      console.log("Firebase уже инициализирован", err);
+    }
+    
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+
+    // Загрузка списка книг
+    function loadBooksForLesson() {
+      db.collection("books").orderBy("createdAt", "desc").get()
+        .then(snapshot => {
+          bookSelect.innerHTML = '<option value="">Выберите книгу</option>';
+          snapshot.forEach(doc => {
+            const book = doc.data();
+            const option = document.createElement("option");
+            option.value = doc.id;
+            option.textContent = book.title;
+            bookSelect.appendChild(option);
+          });
+        })
+        .catch(err => {
+          console.error("Ошибка загрузки книг:", err);
+          alert("Не удалось загрузить список книг");
+        });
+    }
+
+    // Добавить книгу
+    async function addBook() {
+      const title = document.getElementById("newBookTitle").value.trim();
+      
+      if (!title) {
+        alert("Пожалуйста, введите название книги");
+        return;
+      }
+
+      try {
+        await db.collection("books").add({
+          title: title,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        alert("Книга успешно добавлена!");
+        document.getElementById("newBookTitle").value = "";
+        loadBooksForLesson();
+      } catch (err) {
+        console.error("Ошибка добавления книги:", err);
+        alert("Ошибка при добавлении книги: " + err.message);
+      }
+    }
+
+    // Добавить урок
+    async function addLesson() {
+      const bookId = bookSelect.value;
+      const title = document.getElementById("lessonTitle").value.trim();
+      const content = document.getElementById("lessonContent").value.trim();
+      const imageUrl = document.getElementById("lessonImageUrl").value.trim();
+
+      if (!bookId) {
+        alert("Пожалуйста, выберите книгу");
+        return;
+      }
+      
+      if (!title) {
+        alert("Пожалуйста, введите название урока");
+        return;
+      }
+      
+      if (!content) {
+        alert("Пожалуйста, введите содержание урока");
+        return;
+      }
+
+      try {
+        const lessonData = {
+          title: title,
+          content: content,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        
+        if (imageUrl) lessonData.imageUrl = imageUrl;
+        
+        await db.collection("books").doc(bookId).collection("lessons").add(lessonData);
+        
+        alert("Урок успешно добавлен!");
+        // Очищаем поля формы
+        document.getElementById("lessonTitle").value = "";
+        document.getElementById("lessonContent").value = "";
+        document.getElementById("lessonImageUrl").value = "";
+      } catch (err) {
+        console.error("Ошибка добавления урока:", err);
+        alert("Ошибка при добавлении урока: " + err.message);
+      }
+    }
+
+    // Инициализация при загрузке страницы
+    document.addEventListener('DOMContentLoaded', () => {
+      loadBooksForLesson();
+    });
+
+    // Запрет контекстного меню
+    document.addEventListener('contextmenu', function(event) {
+      event.preventDefault();
+    });
+  </script>
+</body>
+</html>
